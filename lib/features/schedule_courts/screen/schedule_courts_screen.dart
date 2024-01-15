@@ -62,75 +62,78 @@ class _ScheduleCourtsScreenState extends State<ScheduleCourtsScreen> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-                  const ScheduleCourtsTitle(),
-                  const SizedBox(height: 20),
-                  for (var tennisCourt in tennisCourts)
-                    RadioListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: AppTitle(
-                        text: '${tennisCourt.name} in ${tennisCourt.location}',
-                        style: Theme.of(context).textTheme.displayMedium!,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    const ScheduleCourtsTitle(),
+                    const SizedBox(height: 20),
+                    for (var tennisCourt in tennisCourts)
+                      RadioListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: AppTitle(
+                          text:
+                              '${tennisCourt.name} in ${tennisCourt.location}',
+                          style: Theme.of(context).textTheme.displayMedium!,
+                        ),
+                        value: tennisCourt.id,
+                        groupValue: selectedCourtId,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCourtId = value;
+                          });
+                        },
+                        activeColor: AppColors.black,
                       ),
-                      value: tennisCourt.id,
-                      groupValue: selectedCourtId,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCourtId = value;
-                        });
-                      },
-                      activeColor: AppColors.black,
-                    ),
-                  const SizedBox(height: 20),
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ScheduleCourtsChoseDate(
-                          dateEditingController: dateEditingController,
-                        ),
-                        const SizedBox(height: 25),
-                        AppInput(
-                          textEditingController: textEditingController,
-                          hintText: 'First name',
-                          errorEmptyText: 'name',
-                        ),
-                        const SizedBox(height: 40),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: AppButton(
-                                text: 'Save',
-                                onPressed: () {
-                                  if (!formKey.currentState!.validate()) {
-                                    return null;
-                                  }
-                                  context
-                                      .read<HomeCubit>()
-                                      .saveTennisCourtBooking(
-                                        selectedCourtId!,
-                                        DateFormat('MMM dd, yyyy')
-                                            .parse(dateEditingController.text),
-                                        textEditingController.text,
-                                        context
-                                            .read<WeatherService>()
-                                            .rainProbability,
-                                      );
-                                  context
-                                      .read<RainProbabilityCubit>()
-                                      .resetRainProbability();
-                                },
+                    const SizedBox(height: 20),
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ScheduleCourtsChoseDate(
+                            dateEditingController: dateEditingController,
+                          ),
+                          const SizedBox(height: 25),
+                          AppInput(
+                            textEditingController: textEditingController,
+                            hintText: 'First name',
+                            errorEmptyText: 'name',
+                          ),
+                          const SizedBox(height: 40),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: AppButton(
+                                  text: 'Save',
+                                  onPressed: () {
+                                    if (!formKey.currentState!.validate()) {
+                                      return null;
+                                    }
+                                    context
+                                        .read<HomeCubit>()
+                                        .saveTennisCourtBooking(
+                                          selectedCourtId!,
+                                          DateFormat('MMM dd, yyyy').parse(
+                                              dateEditingController.text),
+                                          textEditingController.text,
+                                          context
+                                              .read<WeatherService>()
+                                              .rainProbability,
+                                        );
+                                    context
+                                        .read<RainProbabilityCubit>()
+                                        .resetRainProbability();
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
